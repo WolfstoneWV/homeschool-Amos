@@ -1,13 +1,16 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Amos’s School Week</title>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Amos’s Daily Checklist</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#eef5fb;color:#172b45;font:1rem/1.55 system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:clamp(16px,4vw,48px)}header{background:#173b60;color:white;padding:clamp(20px,5vw,46px);border-radius:24px}h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;margin:0 0 12px}p{margin:.5em 0}a{color:inherit}button,input,textarea{font:inherit}button,.link{display:inline-block;border:0;border-radius:10px;padding:10px 15px;background:#dff6e5;color:#133922;font-weight:750;cursor:pointer}.link{margin-top:12px}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #d77800;outline-offset:3px}.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;margin:22px 0 14px}.toolbar button{background:#dce9fa;color:#183655}.days{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px}article,aside{background:white;border:1px solid #c9d9e8;border-radius:16px;padding:18px}article{border-top:5px solid #217c7b}article:nth-child(2n){border-top-color:#6357aa}h2,h3{margin:0}small{font-size:.9rem;color:#445d71}label.task{display:flex;align-items:center;gap:12px;min-height:48px;padding:7px 0;border-top:1px solid #e2ebf1;cursor:pointer}label.task:first-of-type{margin-top:10px}input[type=checkbox]{width:24px;height:24px;flex:none;accent-color:#17736c;margin:0}label:has(input:checked) span{text-decoration:line-through;color:#496676}aside{margin-top:18px;border-left:5px solid #217c7b;background:#f5fcf8}blockquote{margin:0;font-size:1.15rem;font-weight:700}dialog{width:min(94vw,620px);max-height:90vh;border:1px solid #b2c5d8;border-radius:16px;color:inherit;padding:22px}dialog::backdrop{background:#132a4580}dialog label{display:block;margin:12px 0}textarea{display:block;width:100%;resize:vertical}output{font-weight:700}
+*{box-sizing:border-box}body{margin:0;background:#eef5fb;color:#172b45;font:1rem/1.55 system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:clamp(16px,4vw,48px)}header{background:#173b60;color:white;padding:clamp(20px,5vw,46px);border-radius:24px}h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;margin:0 0 12px}p{margin:.5em 0}a{color:inherit}button,input,textarea{font:inherit}button,.link{display:inline-block;border:0;border-radius:10px;padding:10px 15px;background:#dff6e5;color:#133922;font-weight:750;cursor:pointer}.link{margin-top:12px}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #d77800;outline-offset:3px}.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;margin:22px 0 14px}.toolbar button{background:#dce9fa;color:#183655}.days{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px}article,aside{background:white;border:1px solid #c9d9e8;border-radius:16px;padding:18px}article{border-top:5px solid #217c7b}article:nth-child(2n){border-top-color:#6357aa}h2,h3{margin:0}small{font-size:.9rem;color:#445d71}label.task{display:flex;align-items:center;gap:12px;min-height:48px;padding:7px 0;border-top:1px solid #e2ebf1;cursor:pointer}label.task:first-of-type{margin-top:10px}input[type=checkbox]{width:24px;height:24px;flex:none;accent-color:#17736c;margin:0}label:has(input:checked) span:last-child{text-decoration:line-through;color:#496676}aside{margin-top:18px;border-left:5px solid #217c7b;background:#f5fcf8}blockquote{margin:0;font-size:1.15rem;font-weight:700}dialog{width:min(94vw,620px);max-height:90vh;border:1px solid #b2c5d8;border-radius:16px;color:inherit;padding:22px}dialog::backdrop{background:#132a4580}dialog label{display:block;margin:12px 0}textarea{display:block;width:100%;resize:vertical}output{font-weight:700}
+.class-group{margin-top:16px}.class-header{padding:7px 9px;border-radius:7px;background:#e6f0fa;color:#173b60;font-weight:800}.topic-heading{font-size:1rem;line-height:1.35;margin:12px 0 3px}.class-group .task:first-of-type{margin-top:0}
+.schedule-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.schedule-controls select{font:inherit;max-width:100%;border:1px solid #9eb5cb;border-radius:8px;background:white;color:inherit;padding:7px}.toolbar output{white-space:nowrap}.days{grid-template-columns:minmax(0,1fr)}
+.activity-icon{display:inline-grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:8px;background:#eaf1f8;font:1.15rem/1 system-ui,sans-serif}.activity-icon.pdf{background:#ffe9e7}.activity-icon.video{background:#ece6ff}.activity-icon.practice{background:#dcf5ee}.activity-icon.quiz{background:#fff0cf}
 </style>
-<main><header><h1>Amos’s School Week</h1><p id="dates"></p><a class="link" href="https://miacademy.co/" target="_blank" rel="noopener">Open MiAcademy</a><p>Start with the next lesson on your dashboard for each subject.</p></header>
-<div class="toolbar"><output id="progress" aria-live="polite"></output><div><label for="weeks">Week</label> <select id="weeks"></select> <button id="edit" type="button">Edit week</button> <button id="add" type="button">New week</button></div></div>
+<main><header><h1>Amos’s Daily Checklist</h1><p id="dates"></p><a class="link" href="https://miacademy.co/login" target="_blank" rel="noopener">MiAcademy Student Login</a><p>Start with the next lesson on your dashboard for each subject.</p></header>
+<div class="toolbar"><output id="progress" aria-live="polite"></output><div class="schedule-controls"><label for="day">Day <select id="day"></select></label><label for="weeks">Week</label> <select id="weeks"></select> <button id="edit" type="button">Edit week</button> <button id="add" type="button">New week</button></div></div>
 <p id="storageNotice" hidden>Browser storage is unavailable. Changes will last until this page closes.</p>
 <section class="days" id="days" aria-label="Daily checklist"></section>
 <aside><blockquote>“Big things get done one small step at a time.”</blockquote></aside>
-<dialog id="editor"><form id="form"><h2 id="editorTitle"></h2><label>Monday’s date <input id="start" type="date" required></label><p>Enter one task per line. Leave a day empty for a day off.</p><div id="fields"></div><button type="submit">Save week</button> <button type="button" id="cancel">Cancel</button></form></dialog></main>
+<dialog id="editor"><form id="form"><h2 id="editorTitle"></h2><label>Monday’s date <input id="start" type="date" required></label><p>Enter one task per line. Leave a day empty for a day off. To group an activity, use Class · Topic — Activity.</p><div id="fields"></div><button type="submit">Save week</button> <button type="button" id="cancel">Cancel</button></form></dialog></main>
 <script>
 const weekdays=['Monday','Tuesday','Wednesday','Thursday','Friday'];
 const initial='2026-11-23';
@@ -25,27 +28,67 @@ function save(){try{localStorage.setItem(key,JSON.stringify(state))}catch{notice
 function dateAt(monday,index){const date=new Date(monday+'T12:00:00');date.setDate(date.getDate()+index);return date}
 const shortDate=new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric'});
 const fullDate=new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric'});
+function defaultDay(monday){
+ const today=new Date().toDateString();
+ return Math.max(0,weekdays.findIndex((_,index)=>dateAt(monday,index).toDateString()===today));
+}
+let activeDay=defaultDay(state.selected);
 function updateProgress(week){
- const required=week.tasks.flatMap((tasks,day)=>tasks.flatMap((task,index)=>/^optional:/i.test(task)?[]:[!!week.checked[day][index]]));
- byId('progress').textContent=required.length?required.filter(Boolean).length+' of '+required.length+' tasks done':'No required tasks this week';
+ const required=week.tasks[activeDay].flatMap((task,index)=>/^optional:/i.test(task)?[]:[!!week.checked[activeDay][index]]);
+ byId('progress').textContent=required.length?required.filter(Boolean).length+' of '+required.length+' tasks done':'No required tasks today';
+}
+function activityIcon(activity){
+ const types=[
+  [/\bPDF\b/i,'📄','pdf'],
+  [/\bvideo\b/i,'🎬','video'],
+  [/\b(?:quiz|assessment)\b/i,'📊','quiz'],
+  [/\b(?:levels?|practice|review)\b/i,'🎯','practice'],
+  [/\b(?:read|reading)\b/i,'📖','reading'],
+ ];
+ const match=types.find(([pattern])=>pattern.test(activity));
+ const icon=make('span',match?.[1]??'📝');
+ icon.className='activity-icon '+(match?.[2]??'task-icon');
+ icon.setAttribute('aria-hidden','true');
+ return icon;
 }
 function render(){
  const monday=state.selected,week=state.weeks[monday],dates=byId('dates'),selector=byId('weeks'),days=byId('days');
- dates.textContent=shortDate.format(dateAt(monday,0))+' – '+fullDate.format(dateAt(monday,4));
+ dates.textContent=weekdays[activeDay]+', '+fullDate.format(dateAt(monday,activeDay));
  selector.replaceChildren(...Object.keys(state.weeks).sort().map(date=>new Option(fullDate.format(dateAt(date,0)),date,false,date===monday)));
+ byId('day').replaceChildren(...weekdays.map((day,index)=>new Option(day+' · '+shortDate.format(dateAt(monday,index)),String(index),false,index===activeDay)));
+ const index=activeDay;
  days.replaceChildren();
- weekdays.forEach((day,index)=>{
+ {
   const card=make('article');
-  card.append(make('h2',day),make('small',shortDate.format(dateAt(monday,index))));
   if(!week.tasks[index].length)card.append(make('p',monday===initial&&index===3?'Thanksgiving break':'Day off'));
+  const classes=new Map();
   week.tasks[index].forEach((task,taskIndex)=>{
+   const parts=/^(.+?) · (.+?) — (.+)$/.exec(task);
+   let container=card, activity=task;
+   if(parts){
+    const [,className,topicName,activityName]=parts;
+    if(!classes.has(className)){
+     const group=make('section'),heading=make('div',className);
+     group.className='class-group';heading.className='class-header';
+     group.setAttribute('aria-label',className);
+     group.append(heading);card.append(group);
+     classes.set(className,{group,topics:new Map()});
+    }
+    const {group,topics}=classes.get(className);
+    if(!topics.has(topicName)){
+     const topic=make('div'),heading=make('h2',topicName);
+     heading.className='topic-heading';
+     topic.append(heading);group.append(topic);topics.set(topicName,topic);
+    }
+    container=topics.get(topicName);activity=activityName;
+   }
    const label=make('label'),checkbox=make('input');
    label.className='task';checkbox.type='checkbox';checkbox.checked=!!week.checked[index][taskIndex];
    checkbox.addEventListener('change',()=>{week.checked[index][taskIndex]=checkbox.checked;save();updateProgress(week)});
-   label.append(checkbox,make('span',task));card.append(label);
+   label.append(checkbox,activityIcon(activity),make('span',activity));container.append(label);
   });
   days.append(card);
- });
+ }
  updateProgress(week);
 }
 let editing=false;
@@ -62,7 +105,8 @@ function openEditor(edit){
  }));
  byId('editor').showModal();
 }
-byId('weeks').addEventListener('change',event=>{state.selected=event.target.value;save();render()});
+byId('day').addEventListener('change',event=>{activeDay=Number(event.target.value);render()});
+byId('weeks').addEventListener('change',event=>{state.selected=event.target.value;activeDay=defaultDay(state.selected);save();render()});
 byId('edit').onclick=()=>openEditor(true);
 byId('add').onclick=()=>openEditor(false);
 byId('cancel').onclick=()=>byId('editor').close();
@@ -77,7 +121,7 @@ byId('form').onsubmit=event=>{
  const tasks=Array.from(byId('fields').querySelectorAll('textarea'),field=>field.value.split('\n').map(task=>task.trim()).filter(Boolean));
  const previous=editing?state.weeks[date]:null;
  const checked=tasks.map((day,index)=>day.map((task,position)=>!!(previous&&previous.tasks[index][position]===task&&previous.checked[index][position])));
- state.weeks[date]={tasks,checked};state.selected=date;save();render();byId('editor').close();
+ state.weeks[date]={tasks,checked};if(state.selected!==date)activeDay=defaultDay(date);state.selected=date;save();render();byId('editor').close();
 };
 render();
 </script></html>
