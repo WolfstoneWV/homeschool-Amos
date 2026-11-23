@@ -4,13 +4,14 @@
 .class-group{margin-top:16px}.class-header{padding:7px 9px;border-radius:7px;background:#e6f0fa;color:#173b60;font-weight:800}.topic-heading{font-size:1rem;line-height:1.35;margin:12px 0 3px}.class-group .task:first-of-type{margin-top:0}
 .schedule-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.schedule-controls select{font:inherit;max-width:100%;border:1px solid #9eb5cb;border-radius:8px;background:white;color:inherit;padding:7px}.toolbar output{white-space:nowrap}.days{grid-template-columns:minmax(0,1fr)}
 .activity-icon{display:inline-grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:8px;background:#eaf1f8;font:1.15rem/1 system-ui,sans-serif}.activity-icon.pdf{background:#ffe9e7}.activity-icon.video{background:#ece6ff}.activity-icon.practice{background:#dcf5ee}.activity-icon.quiz{background:#fff0cf}
+.pdf-group{margin:8px 0 12px;padding:8px 10px 0;border-left:3px solid #d88b87;background:#fff8f7;border-radius:8px}.pdf-heading{font-size:1rem}.pdf-page{font-size:.85rem;color:#445d71;margin-left:8px}
 </style>
 <main><header><h1>Amos’s Daily Checklist</h1><p id="dates"></p><a class="link" href="https://miacademy.co/login" target="_blank" rel="noopener">MiAcademy Student Login</a><p>Start with the next lesson on your dashboard for each subject.</p></header>
 <div class="toolbar"><output id="progress" aria-live="polite"></output><div class="schedule-controls"><label for="day">Day <select id="day"></select></label><label for="weeks">Week</label> <select id="weeks"></select> <button id="edit" type="button">Edit week</button> <button id="add" type="button">New week</button></div></div>
 <p id="storageNotice" hidden>Browser storage is unavailable. Changes will last until this page closes.</p>
 <section class="days" id="days" aria-label="Daily checklist"></section>
 <aside><blockquote>“Big things get done one small step at a time.”</blockquote></aside>
-<dialog id="editor"><form id="form"><h2 id="editorTitle"></h2><label>Monday’s date <input id="start" type="date" required></label><p>Enter one task per line. Leave a day empty for a day off. To group an activity, use Class · Topic — Activity.</p><div id="fields"></div><button type="submit">Save week</button> <button type="button" id="cancel">Cancel</button></form></dialog></main>
+<dialog id="editor"><form id="form"><h2 id="editorTitle"></h2><label>Monday’s date <input id="start" type="date" required></label><p>Enter one task per line. Leave a day empty for a day off. To group an activity, use Class · Topic — Activity. For a worksheet, use Class · Topic — Student PDF / Day 1: Activity.</p><div id="fields"></div><button type="submit">Save week</button> <button type="button" id="cancel">Cancel</button></form></dialog></main>
 <script>
 const weekdays=['Monday','Tuesday','Wednesday','Thursday','Friday'];
 const initial='2026-11-23';
@@ -22,6 +23,59 @@ const key='amos-school-weeks-v1';
 const notice=document.querySelector('#storageNotice');
 let state={selected:initial,weeks:{[initial]:{tasks:holiday,checked:[[],[],[],[],[]]}}};
 try {const saved=localStorage.getItem(key);if(saved){state=JSON.parse(saved);const first=state.weeks[initial];if(first){[originalMonday,originalTuesday,originalWednesday].forEach((tasks,day)=>{if(JSON.stringify(first.tasks[day])===JSON.stringify(tasks)){first.tasks[day]=holiday[day];first.checked[day]=[]}});localStorage.setItem(key,JSON.stringify(state))}}} catch {notice.hidden=false}
+const languagePdf='https://drive.google.com/file/d/1tkjzvEMVw1gKUwUKgPkjgy7nxFbDmX8-/view';
+const worksheetPages={
+ 'Asking and Answering Questions':{
+  'Day 1: Guided Notes':[62,63],
+  'Day 1: Read and Respond':[64,66],
+  'Day 2: Language Lab':[67,68],
+  'Day 2: Connect and Reflect':[69,69],
+  'Day 3: Extend Your Skills':[70,71],
+ },
+ 'Paraphrasing':{
+  'Day 1: Guided Notes':[75,76],
+  'Day 1: Read and Respond':[77,78],
+ },
+};
+
+function addScheduledWorksheets(week){
+ if(!week)return;
+ const questions='Language Arts · Asking and Answering Questions — ';
+ const paraphrasing='Language Arts · Paraphrasing — ';
+ const worksheet=(lesson,name)=>lesson+'Student PDF / '+name;
+ const insert=(day,anchor,entries,replace=false)=>{
+  const tasks=week.tasks[day],checked=week.checked[day];
+  const at=tasks.indexOf(anchor);
+  if(at<0)return;
+  const additions=entries.filter(task=>!tasks.includes(task));
+  const complete=replace&&!!checked[at];
+  const position=at;
+  tasks.splice(position,Number(replace),...additions);
+  while(checked.length<position)checked.push(false);
+  checked.splice(position,Number(replace),...additions.map(()=>complete));
+ };
+ insert(0,questions+'Student PDF',[
+  worksheet(questions,'Day 1: Guided Notes'),
+  worksheet(questions,'Day 1: Read and Respond'),
+ ],true);
+ insert(1,questions+'Levels 3–4',[
+  worksheet(questions,'Day 2: Language Lab'),
+  worksheet(questions,'Day 2: Connect and Reflect'),
+ ]);
+ if(week.tasks[2].includes(paraphrasing+'Student PDF')){
+  insert(2,paraphrasing+'Student PDF',[
+   worksheet(paraphrasing,'Day 1: Guided Notes'),
+   worksheet(paraphrasing,'Day 1: Read and Respond'),
+  ],true);
+  insert(2,worksheet(paraphrasing,'Day 1: Guided Notes'),[worksheet(questions,'Day 3: Extend Your Skills')]);
+ }
+}
+if(state.worksheetScheduleVersion!==1){
+ addScheduledWorksheets(state.weeks[initial]);
+ state.worksheetScheduleVersion=1;
+ save();
+}
+
 const byId=id=>document.getElementById(id);
 const make=(tag,value)=>{const node=document.createElement(tag);if(value!==undefined)node.textContent=value;return node};
 function save(){try{localStorage.setItem(key,JSON.stringify(state))}catch{notice.hidden=false}}
@@ -61,10 +115,10 @@ function render(){
  {
   const card=make('article');
   if(!week.tasks[index].length)card.append(make('p',monday===initial&&index===3?'Thanksgiving break':'Day off'));
-  const classes=new Map();
+  const classes=new Map(),pdfGroups=new Map();
   week.tasks[index].forEach((task,taskIndex)=>{
    const parts=/^(.+?) · (.+?) — (.+)$/.exec(task);
-   let container=card, activity=task;
+   let container=card, activity=task, pages;
    if(parts){
     const [,className,topicName,activityName]=parts;
     if(!classes.has(className)){
@@ -81,11 +135,32 @@ function render(){
      topic.append(heading);group.append(topic);topics.set(topicName,topic);
     }
     container=topics.get(topicName);activity=activityName;
+    const worksheet=/^Student PDF \/ (.+)$/.exec(activity);
+    if(worksheet){
+     if(!pdfGroups.has(container)){
+      const group=make('section'),heading=make('h3','📄 Student PDF');
+      heading.className='pdf-heading';group.className='pdf-group';
+      group.append(heading);container.append(group);pdfGroups.set(container,group);
+     }
+     container=pdfGroups.get(container);
+     activity=worksheet[1];
+     if(className==='Language Arts')pages=worksheetPages[topicName]?.[activity];
+    }
    }
    const label=make('label'),checkbox=make('input');
    label.className='task';checkbox.type='checkbox';checkbox.checked=!!week.checked[index][taskIndex];
    checkbox.addEventListener('change',()=>{week.checked[index][taskIndex]=checkbox.checked;save();updateProgress(week)});
-   label.append(checkbox,activityIcon(activity),make('span',activity));container.append(label);
+   const title=make('span',activity);
+   if(pages){
+    const [first,last]=pages;
+    const pageLabel=first===last?'PDF p. '+first:'PDF pp. '+first+'–'+last;
+    const link=make('a',pageLabel);
+    link.className='pdf-page';link.href=languagePdf+'#page='+first;
+    link.target='_blank';link.rel='noopener';
+    link.setAttribute('aria-label','Open '+activity+' ('+pageLabel+')');
+    title.append(' ',link);
+   }
+   label.append(checkbox,activityIcon(pages?'PDF':activity),title);container.append(label);
   });
   days.append(card);
  }
